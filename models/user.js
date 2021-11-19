@@ -7,8 +7,6 @@ const User = new Schema({
                     type: Schema.Types.Boolean,
                     default:false,
                 }
-
-
                 });
 User.plugin(passportLocalMongoose);
 

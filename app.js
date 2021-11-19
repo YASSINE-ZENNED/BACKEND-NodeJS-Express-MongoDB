@@ -7,6 +7,7 @@ var logger = require('morgan');
 var session = require('express-session');
 var FileStore = require('session-file-store')(session);
 var passport = require('passport');
+
 var authenticate = require('./authenticate');
  
 var indexRouter = require('./routes/index');
@@ -14,7 +15,7 @@ var usersRouter = require('./routes/users');
 var dishRouter = require('./routes/dishRouter');
 var promoRouter = require('./routes/promoRouter');
 var leaderRouter = require('./routes/leadersRouter');
-
+var config = require('./config');
 
 const mongoose = require('mongoose');
 
@@ -22,7 +23,7 @@ const mongoose = require('mongoose');
 const Dishes =require('./models/dishes');
 const Leader = require('./models/leader');
 
-const url ='mongodb://127.0.0.1:27017/conFusion';
+const url =config.mongoUrl;
 const connect=mongoose.connect(url);
 
 
@@ -51,41 +52,16 @@ app.use(express.urlencoded({ extended: false }));
 
 // app.use(cookieParser('15632-63259-01230-55866'));
 
-app.use(session({
-  name:'session_id',
-  secret:'15632-63259-01230-55866',
-  saveUninitialized:false,
-  resave:false,
-  store: new FileStore()
 
-}));
 app.use(passport.initialize());
-app.use(passport.session());
 
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 
-function auth(req,res,next){
-    if(!req.user){
-        var err = new Error('Invalid authorization header || u are not allwed');
-
-
-          res.setHeader('WWW-Authenticate','Basic');
-          err.status=401;
-         return next(err);
-    }else{
-      next(); 
-    }
-
-};
-
-app.use(auth);
-
-
-
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 app.use('/dishes',dishRouter);
 app.use('/promotions',promoRouter);
