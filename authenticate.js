@@ -1,6 +1,9 @@
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var User = require('./models/user');
+const mongoose = require('mongoose');
+
+const Dishes =require('./models/dishes');
 
 var JwtStrategy = require('passport-jwt').Strategy;
 var ExtractJwt = require('passport-jwt').ExtractJwt;
@@ -45,4 +48,39 @@ exports.jwtpassport =passport.use(new JwtStrategy(opts,(jwt_paylode, done) =>{
       } 
     ));
 
-exports.verifyUser = passport.authenticate('jwt',{session:false})    
+
+
+exports.verifyUser = passport.authenticate('jwt',{session:false})  
+
+
+
+exports.verifyAdmin = function (req, res, next) { 
+    if (!req.user.admin) {
+        
+        err = new Error('You are not authorized to perform this operation!');
+        err.status= 404;
+        return next(err);
+        }
+    next();
+  }
+
+
+
+  exports.verifyCommentAuthor = async function (req, res, next) { 
+     var id1 = req.user._id;
+
+     var id2 = (await Dishes.findOne({_id: req.params.dishID})).comments.id(req.params.commentID).author;
+     console.log('id1     ' +  id2);
+
+    if (!(id1.equals(id2))){
+        
+        err = new Error('You are not the auther of this comment   '+id1+'   -----------   '+id2);
+        err.status= 404;
+        return next(err);
+        }
+    next();
+
+  }
+
+
+

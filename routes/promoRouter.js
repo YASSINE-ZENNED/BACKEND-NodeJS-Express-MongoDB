@@ -20,7 +20,7 @@ promoRouter.route('/')
     },(err)=>next(err))
     .catch((err)=>next(err));
 })
-.post(authenticate.verifyUser ,(req, res, next) => {
+.post(authenticate.verifyUser, authenticate.verifyAdmin ,(req, res, next) => {
     Promotions.create(req.body)
     .then((promo) => {
         console.log('Dish Created ', promo);
@@ -30,11 +30,11 @@ promoRouter.route('/')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.put(authenticate.verifyUser ,(req, res, next) => {
+.put(authenticate.verifyUser, authenticate.verifyAdmin ,(req, res, next) => {
     res.statusCode=403;
     res.end(' method PUT  not supported  on dishes');
 })
-.delete(authenticate.verifyUser ,(req, res, next) => {
+.delete(authenticate.verifyUser, authenticate.verifyAdmin ,(req, res, next) => {
 
     Promotions.remove({}).then((resp)=>{
         res.statusCode = 200;
@@ -56,13 +56,13 @@ promoRouter.route('/:promoID')
          .catch((err)=>next(err));
 
 })
-.post(authenticate.verifyUser ,(req, res, next) => {
+.post(authenticate.verifyUser, authenticate.verifyAdmin ,(req, res, next) => {
     res.statusCode=403;
 
     res.end(' method POST  not supported  on /promotions/'+req.params.promoID);
 
 })
-.put(authenticate.verifyUser ,(req, res, next) => {
+.put(authenticate.verifyUser, authenticate.verifyAdmin ,(req, res, next) => {
     Promotions.findByIdAndUpdate(req.params.promoID, {
         $set: req.body
     }, { new: true })
@@ -73,7 +73,7 @@ promoRouter.route('/:promoID')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.delete(authenticate.verifyUser ,(req, res, next) => {
+.delete(authenticate.verifyUser, authenticate.verifyAdmin ,(req, res, next) => {
 
     Promotions.findByIdAndRemove(req.params.promoID)
     .then((resp)=>{
