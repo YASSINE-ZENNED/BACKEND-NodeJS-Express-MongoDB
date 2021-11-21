@@ -40,6 +40,9 @@ connect.then(
 
 var app = express();
 
+
+/*
+
 app.all("*", (req, res, next) => {
   if (req.secure) {
     return next();
@@ -50,6 +53,8 @@ app.all("*", (req, res, next) => {
     );
   }
 });
+
+*/
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
