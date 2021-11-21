@@ -26,7 +26,7 @@ const Dishes = require("./models/dishes");
 const Leader = require("./models/leader");
 
 const url = config.mongoUrl;
-const connect = mongoose.connect(url);
+const connect = mongoose.connect(process.env.MONGODB_URL);
 
 connect.then(
   (db) => {
